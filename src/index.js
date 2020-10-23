@@ -32,7 +32,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 dbConnector
-  .then(() => {
+  .then(async () => {
+    const roles = await context.Role.countDocuments({});
+    if (roles < 1) {
+      consola.error('No roles on DB');
+      require('./db/seeds/role');
+    }
     server.listen(process.env.PORT, process.env.HOST).then(({ url }) => {
       consola.ready({
         message: `🚀 Server ready at ${url}`,
