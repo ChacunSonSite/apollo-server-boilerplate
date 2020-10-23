@@ -10,7 +10,7 @@ module.exports = {
     ecmaVersion: 8,
     sourceType: 'module',
   },
-  extends: ['airbnb', 'prettier', 'prettier/standard'],
+  extends: ['prettier', 'prettier/standard'],
   plugins: ['node', 'prettier'],
   // add your custom rules here
   rules: {
