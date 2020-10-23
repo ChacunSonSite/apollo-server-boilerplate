@@ -1,22 +1,51 @@
 require('dotenv').config();
+import consola from 'consola';
 import { ApolloServer, gql } from 'apollo-server';
+import dbConnector from './db/connector';
+import { typeDefs, resolvers } from './schema';
+import context from './db/models/context';
 
-console.log(`Starting on ${process.env.NODE_ENV} mode`);
-
-const server = new ApolloServer({
-  typeDefs: gql`
-    type Query {
-      _empty: String
-    }
-    type Mutation {
-      _empty: String
-    }
-  `,
+consola.info({
+  message: `Starting on ${process.env.NODE_ENV} mode`,
+  badge: true,
 });
 
-server.listen(process.env.PORT, process.env.HOST).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+var server = {};
+// create server constant including:
+// type definitions (graphql),
+// resolvers (js functions)
+// and context(mongo models)
+if (process.env.NODE_ENV === 'production') {
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context,
+    introspection: false,
+    playground: false,
+  });
+} else {
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context,
+  });
+}
+
+dbConnector
+  .then(() => {
+    server.listen(process.env.PORT, process.env.HOST).then(({ url }) => {
+      consola.ready({
+        message: `🚀 Server ready at ${url}`,
+        badge: true,
+      });
+    });
+  })
+  .catch((err) => {
+    consola.error({
+      message: err,
+      badge: true,
+    });
+  });
 
 if (module.hot) {
   module.hot.accept();
