@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+require("dotenv").config();
 
 const server = new ApolloServer({
   typeDefs: gql`
@@ -11,6 +12,6 @@ const server = new ApolloServer({
   `
 });
 
-server.listen().then(({ url }) => {
+server.listen(process.env.PORT, process.env.HOST).then(({ url }) => {
   console.log(`apollo-server started on ${url}`);
 });
