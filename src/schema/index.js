@@ -1,8 +1,11 @@
+import { merge } from 'lodash'
 import { gql } from 'apollo-server';
 import { UserResolvers } from './user';
+import { EmailAddressResolver } from 'graphql-scalars';
 import UserType from './user/type.gql';
 
 const Types = gql`
+  scalar EmailAddress
   type Query {
     _empty: String
   }
@@ -11,4 +14,4 @@ const Types = gql`
   }
 `;
 export const typeDefs = [Types, gql`${UserType}`];
-export const resolvers = UserResolvers;
+export const resolvers = merge({ EmailAddress: EmailAddressResolver }, UserResolvers);
