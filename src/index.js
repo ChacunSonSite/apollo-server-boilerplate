@@ -1,5 +1,7 @@
-const { ApolloServer, gql } = require('apollo-server');
-require("dotenv").config();
+import dotenv from 'dotenv';
+import { ApolloServer, gql } from 'apollo-server';
+
+dotenv.config();
 
 const server = new ApolloServer({
   typeDefs: gql`
