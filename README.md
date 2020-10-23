@@ -25,5 +25,6 @@ the proyect will start running.
 
 You can easy analize your bundle and see the weight of each package, just use `yarn build --env a`
 
-### TODO: 
-* Incorporate a CI for build out and be capable to use `yarn install --prod` for reduce the node_modules footprint on production.
+### TODO:
+
+- Incorporate a CI for build out and be capable to use `yarn install --prod` for reduce the node_modules footprint on production.
