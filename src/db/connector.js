@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 require('dotenv').config();
 
 export default mongoose.connect(
-  ['mongodb://', process.env.DB_SERVER, process.env.DB_DBNAME].join(''),
+  ['mongodb://', process.env.DB_SERVER, '/', process.env.DB_DBNAME].join(''),
   {
     useNewUrlParser: true,
     useCreateIndex: true,
