@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 export default mongoose.model(
-  'User',
+  'Role',
   new mongoose.Schema({
     name: {
       type: String,

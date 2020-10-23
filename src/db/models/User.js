@@ -25,7 +25,7 @@ export default mongoose.model(
         type: Date,
         default: Date.now,
       },
-      roles: {
+      role: {
         type: [mongoose.Schema.Types.ObjectId],
         required: true,
         ref: 'Role',
