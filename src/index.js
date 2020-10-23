@@ -1,20 +1,40 @@
 require('dotenv').config();
 import consola from 'consola';
-import { ApolloServer, gql } from 'apollo-server';
+import util from 'util';
+import { ApolloServer, AuthenticationError } from 'apollo-server';
 import dbConnector from './db/connector';
 import { typeDefs, resolvers } from './schema';
-import context from './db/models/context';
+import { User, Role } from './db/models';
 
 consola.info({
   message: `Starting on ${process.env.NODE_ENV} mode`,
   badge: true,
 });
 
+const context = async ({ req }) => {
+  //consola.info(`Calling context ${util.inspect(req.headers, { showHidden: true, depth: null })}`);
+  let user = false;
+  // get the user token from the headers
+  const token = req.headers.authentication || false;
+
+  if (token) {
+    // try to retrieve a user with the token
+    user = await User.findOne({ token: token });
+
+    consola.info(`token= ${token}, User: ${util.inspect(user, { showHidden: true, depth: null })}`);
+  }
+
+  // optionally block the user
+  // we could also check user roles/permissions here
+  if (!user) throw new AuthenticationError('you must be logged in to query this schema');
+
+  return {
+    User,
+    Role
+  }
+}
+
 var server = {};
-// create server constant including:
-// type definitions (graphql),
-// resolvers (js functions)
-// and context(mongo models)
 if (process.env.NODE_ENV === 'production') {
   server = new ApolloServer({
     typeDefs,
@@ -33,7 +53,7 @@ if (process.env.NODE_ENV === 'production') {
 
 dbConnector
   .then(async () => {
-    const roles = await context.Role.countDocuments({});
+    const roles = await Role.countDocuments({});
     if (roles < 1) {
       consola.error('No roles on DB');
       require('./db/seeds/role');

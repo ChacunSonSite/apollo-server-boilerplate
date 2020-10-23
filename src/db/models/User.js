@@ -30,6 +30,11 @@ export default mongoose.model(
         required: true,
         ref: 'Role',
       },
+      token: {
+        type: String,
+        required: false,
+        trim: true,
+      },
     },
     { timestamps: true }
   )
