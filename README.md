@@ -2,6 +2,9 @@
 
 This proyect is a good starting point for a project. it includes multiple packages for facilitate the development and upgrade the performance.
 
+## Set up
+This project uses mongodb as a persistent mechanism, to set it up please use the .env.model as a starting point, copying it to a .env file and providing the desired configuration, specially around the db connection information, then follow either the development or production cycle as specified below. 
+
 ## Development
 
     yarn
