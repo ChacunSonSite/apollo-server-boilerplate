@@ -6,5 +6,9 @@
   "repository": "git@github.com:ChacunSonSite/apollo-server-boilerplate.git",
   "author": "Cocoa Web Studio",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "apollo-server": "^2.18.2",
+    "graphql": "^15.3.0"
+  }
 }
