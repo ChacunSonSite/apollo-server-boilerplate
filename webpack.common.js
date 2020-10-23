@@ -1,12 +1,11 @@
 const path = require('path');
-const { argv } = require('yargs');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
 module.exports = (env) => {
-  console.log('analize: ', env.a); // 'local'
-  const plugins = [];
-  if (env.a) {
+  const plugins = [new CleanWebpackPlugin()];
+  if (env && env.a) {
     plugins.push(
       new BundleAnalyzerPlugin({
         analyzerMode: 'static',
@@ -26,5 +25,14 @@ module.exports = (env) => {
     },
     target: 'node',
     plugins,
+    module: {
+      rules: [
+        {
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          loader: 'graphql-tag/loader',
+        },
+      ],
+    },
   };
 };

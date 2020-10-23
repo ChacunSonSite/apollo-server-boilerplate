@@ -10,9 +10,9 @@
   "scripts": {
     "build": "webpack --config webpack.production.js",
     "build:dev": "webpack --config webpack.development.js",
-    "dev": "NODE_ENV=development node ./dist/server",
+    "dev": "NODE_ENV=development node ./dist/server.js",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
-    "start": "NODE_ENV=production node ./dist/server"
+    "start": "NODE_ENV=production node ./dist/server.js"
   },
   "dependencies": {
     "apollo-server": "^2.18.2",
@@ -33,6 +33,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.2",
+    "graphql-tag": "^2.11.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.2",
     "prettier": "^2.1.2",
