@@ -1,8 +1,7 @@
-require('dotenv').config();
 import consola from "consola";
-import jwt from "jsonwebtoken";
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
+import { SignToken } from '../../jwt'
 
 export const UserResolvers = {
   Query: {
@@ -24,24 +23,14 @@ export const UserResolvers = {
     },
   },
   Mutation: {
-    async signIn (_, { email, password }, { User, res, authentication }) {
-      consola.log(authentication);
-      if (!authentication) {
+    async signIn (_, { email, password }, { User, res, currentUser }) {
+      if (!currentUser) {
         const user = await User.findOne({ email });
         if (user && await bcrypt.compare(password, user.password)) {
-          const newToken = await jwt.sign(
-            { username: user.username, email: user.email },
-            process.env.PRIVATE_KEY,
-            { expiresIn: '2h' }
+          const newToken = await SignToken(
+            { username: user.username, email: user.email }
           );
           consola.info(`TOKEN!!!: ${newToken}`);
-          await User.updateOne(
-            { email: email },
-            {
-              token: newToken,
-              updatedAt: Date.now(),
-            }
-          )
           res.header('authentication', newToken);
           return `user ${user.username} has a new token! test`;
         } else {
