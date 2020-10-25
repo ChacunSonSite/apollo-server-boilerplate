@@ -1,7 +1,7 @@
 'use strict';
 import mongoose from 'mongoose';
 
-export default mongoose.model(
+export const User = mongoose.model(
   'User',
   new mongoose.Schema(
     {

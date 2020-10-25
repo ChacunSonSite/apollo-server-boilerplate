@@ -1,8 +1,8 @@
 import consola from 'consola';
-import Roles from '../models/Role';
+import { Role } from '../models/Role';
 
 // Adding 'SUPER-ADMIN' role.
-Roles.findOne({ name: "SUPER-ADMIN" }, (error, role) => {
+Role.findOne({ name: "SUPER-ADMIN" }, (error, role) => {
   if (error) { consola.error('error', error); }
   if (!role) {
     let role = { name: "SUPER-ADMIN" }
@@ -12,7 +12,7 @@ Roles.findOne({ name: "SUPER-ADMIN" }, (error, role) => {
 })
 
 // Adding 'USER' role.
-Roles.findOne({ name: "USER" }, (error, role) => {
+Role.findOne({ name: "USER" }, (error, role) => {
   if (error) { consola.error('error', error); }
   if (!role) {
     let role = { name: "USER" }
@@ -22,7 +22,7 @@ Roles.findOne({ name: "USER" }, (error, role) => {
 })
 
 // Adding 'ADMIN' role.
-Roles.findOne({ name: "ADMIN" }, (error, role) => {
+Role.findOne({ name: "ADMIN" }, (error, role) => {
   if (error) { consola.error('error', error); }
   if (!role) {
     let role = { name: "ADMIN" }
