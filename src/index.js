@@ -3,7 +3,7 @@ import consola from 'consola';
 import jwt from "jsonwebtoken";
 import { ApolloServer } from 'apollo-server';
 import dbConnector from './db/connector';
-import { typeDefs, resolvers } from './schema';
+import * as schema from './schema';
 import * as models from './db/models';
 
 consola.info({
@@ -28,22 +28,19 @@ const context = async ({ req, res }) => {
   };
 }
 
-var server = {};
+const options = {
+  ...schema,
+  context,
+}
+
 if (process.env.NODE_ENV === 'production') {
-  server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context,
+  Object.assign(options, {
     introspection: false,
     playground: false,
   });
-} else {
-  server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context,
-  });
 }
+
+const server = new ApolloServer(options);
 
 dbConnector
   .then(async () => {
