@@ -13,9 +13,9 @@ consola.info({
 
 const context = async ({ req, res }) => {
   var currentUser = false;
-  if (req.headers.authentication) {
+  if (req.headers && req.headers.authorization) {
     try {
-      const decoded = await ValidateToken(req.headers.authentication);
+      const decoded = await ValidateToken(req.headers.authorization);
       currentUser = await models.User.findOne({ email: decoded.email, username: decoded.username });
     } catch (err) {
       consola.error(`ERROR: ${err} `);
