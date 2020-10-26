@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import { gql } from 'apollo-server';
 import { UserResolvers } from './user';
 import { EmailAddressResolver } from 'graphql-scalars';

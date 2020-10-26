@@ -14,7 +14,7 @@ module.exports = (env) => {
     entry: ['webpack/hot/poll?1000', path.join(__dirname, 'src/index.js')],
     externals: [
       nodeExternals({
-        allowlist: ['webpack/hot/poll?1000'],
+        allowlist: ['webpack/hot/poll?1000', 'lodash-es', 'dotenv', 'graphql', 'graphql-scalars'],
       }),
     ],
     mode: 'development',
