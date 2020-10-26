@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
-import util from 'util';
 import consola from 'consola';
 import { Key } from '../db/models/Key';
 
 const getKey = async (header, callback) => {
-  consola.info(`token Header: ${util.inspect(header, { showHidden: true, depth: null })}`);
+  // Use Key Id to retrace the key used to sign the token.
   callback(null, (await Key.findOne({ _id: header.kid })).key);
 }
 
+// jwt
 const verifyPromise = (...args) => {
   return new Promise((resolve, reject) => {
     jwt.verify(...args, (err, data) => {
@@ -27,11 +27,17 @@ export const ValidateToken = (token) => {
 
 export const SignToken = async (data, expire = '2h') => {
   try {
+    // Chose randomly a key from the keys collection
     const privateKey = (await Key.aggregate([{ $sample: { size: 1 } }]))[0];
     const token = jwt.sign(
       data,
       privateKey.key,
-      { expiresIn: expire, header: { kid: privateKey._id } },
+      {
+        expiresIn: expire,
+        header: {
+          kid: privateKey._id // Add key id to the JWT header, it will use during verification
+        }
+      },
     );
     return token
   } catch (err) {
