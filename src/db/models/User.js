@@ -1,7 +1,7 @@
 'use strict';
 import mongoose from 'mongoose';
 
-export default mongoose.model(
+export const User = mongoose.model(
   'User',
   new mongoose.Schema(
     {
@@ -29,6 +29,11 @@ export default mongoose.model(
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Role',
+      },
+      token: {
+        type: String,
+        required: false,
+        trim: true,
       },
     },
     { timestamps: true }

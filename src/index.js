@@ -1,42 +1,53 @@
 require('dotenv').config();
 import consola from 'consola';
-import { ApolloServer, gql } from 'apollo-server';
+import { ValidateToken } from './jwt';
+import { ApolloServer } from 'apollo-server';
 import dbConnector from './db/connector';
-import { typeDefs, resolvers } from './schema';
-import context from './db/models/context';
+import * as schema from './schema';
+import * as models from './db/models';
 
 consola.info({
   message: `Starting on ${process.env.NODE_ENV} mode`,
   badge: true,
 });
 
-var server = {};
-// create server constant including:
-// type definitions (graphql),
-// resolvers (js functions)
-// and context(mongo models)
+const context = async ({ req, res }) => {
+  var currentUser = false;
+  if (req.headers.authentication) {
+    try {
+      const decoded = await ValidateToken(req.headers.authentication);
+      currentUser = await models.User.findOne({ email: decoded.email, username: decoded.username });
+    } catch (err) {
+      consola.error(`ERROR: ${err} `);
+    }
+  }
+  return {
+    currentUser,
+    res,
+    ...models
+  };
+}
+
+const options = {
+  ...schema,
+  context,
+}
+
 if (process.env.NODE_ENV === 'production') {
-  server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context,
+  Object.assign(options, {
     introspection: false,
     playground: false,
   });
-} else {
-  server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context,
-  });
 }
+
+const server = new ApolloServer(options);
 
 dbConnector
   .then(async () => {
-    const roles = await context.Role.countDocuments({});
-    if (roles < 1) {
+    if (await models.Role.countDocuments({}) < 1) {
       consola.error('No roles on DB');
-      require('./db/seeds/role');
+      require('./db/seeds/keys');
+      require('./db/seeds/roles');
     }
     server.listen(process.env.PORT, process.env.HOST).then(({ url }) => {
       consola.ready({
