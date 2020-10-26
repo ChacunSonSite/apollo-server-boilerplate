@@ -7,7 +7,10 @@ module.exports = {
   },
   parserOptions: {
     parser: 'esm',
-    ecmaVersion: 8,
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      impliedStrict: true
+    },
     sourceType: 'module',
   },
   extends: ['prettier', 'prettier/standard'],

@@ -1,12 +1,19 @@
 import consola from "consola";
+import bcrypt from 'bcryptjs';
+const salt = bcrypt.genSaltSync(10);
+import { SignToken } from '../../jwt'
 
 export const UserResolvers = {
   Query: {
     users: (_, args = '', { User }) => {
-      return User.find({}).populate({
-        path: 'role',
-        model: 'Role',
-      });
+      try {
+        return User.find({}).populate({
+          path: 'role',
+          model: 'Role',
+        });
+      } catch (err) {
+        consola.error(err);
+      }
     },
     user: (_, { id }, { User }) => {
       return User.findById(id).populate({
@@ -16,12 +23,21 @@ export const UserResolvers = {
     },
   },
   Mutation: {
-    async signIn (_, { email, password }, { User }) {
-      const user = await User.findOne({ email, password });
-      if (user) {
-        return `user ${user.username} JWT new token! test`;
+    async signIn (_, { email, password }, { User, res, currentUser }) {
+      if (!currentUser) {
+        const user = await User.findOne({ email });
+        if (user && await bcrypt.compare(password, user.password)) {
+          const newToken = await SignToken(
+            { username: user.username, email: user.email }
+          );
+          consola.info(`TOKEN!!!: ${newToken}`);
+          res.header('authentication', newToken);
+          return `user ${user.username} has a new token! test`;
+        } else {
+          throw new Error('User not exist');
+        }
       } else {
-        throw new Error('User not exist');
+        return 'User already connected';
       }
     },
     async signupUser (_, { username, email, password, role = 'USER' }, { User, Role }) {
@@ -37,13 +53,13 @@ export const UserResolvers = {
       if (await User.estimatedDocumentCount({}) < 1) {
         roleDB = await Role.findOne({ name: 'SUPER-ADMIN' });
       }
-
+      const hash = await bcrypt.hashSync(password, salt);
       if (
         roleDB &&
         (await new User({
           username,
           email,
-          password,
+          password: hash,
           role: roleDB._id,
         }).save())
       ) {

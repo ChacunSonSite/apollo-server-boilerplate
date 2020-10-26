@@ -1,16 +1,12 @@
 'use strict';
 import mongoose from 'mongoose';
 
-export const Role = mongoose.model(
-  'Role',
+export const Key = mongoose.model(
+  'Key',
   new mongoose.Schema({
-    name: {
+    key: {
       type: String,
       required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now(),
     },
   })
 );
