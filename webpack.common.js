@@ -1,7 +1,6 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = (env) => {
   const plugins = [new CleanWebpackPlugin()];
@@ -20,7 +19,7 @@ module.exports = (env) => {
 
   return {
     output: {
-      filename: 'server.js',
+      filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
     },
     target: 'node',
@@ -33,6 +32,15 @@ module.exports = (env) => {
           loader: 'graphql-tag/loader',
         },
       ],
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        automaticNameDelimiter: '?',
+        cacheGroups: {},
+        minSize: 100000,
+        maxSize: 200000
+      }
     },
   };
 };
