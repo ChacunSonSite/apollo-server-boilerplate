@@ -10,9 +10,9 @@
   "scripts": {
     "build": "webpack --config webpack.production.js",
     "build:dev": "webpack --config webpack.development.js",
-    "dev": "NODE_ENV=development node ./dist/main.js",
+    "dev": "env NODE_ENV=development node ./dist/main.js",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
-    "start": "NODE_ENV=production node ./dist/main.js"
+    "start": "env NODE_ENV=production node ./dist/main.js"
   },
   "dependencies": {
     "apollo-server": "^2.18.2",
