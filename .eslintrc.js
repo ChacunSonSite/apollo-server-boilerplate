@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: {
     es6: true,
-    browser: true,
+    browser: false,
     node: true,
   },
   parserOptions: {
