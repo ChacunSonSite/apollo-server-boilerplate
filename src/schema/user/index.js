@@ -1,16 +1,24 @@
-import consola from "consola";
+import consola from 'consola';
 import bcrypt from 'bcryptjs';
 const salt = bcrypt.genSaltSync(10);
-import { SignToken } from '../../jwt'
+import { SignToken } from '../../jwt';
 
 export const UserResolvers = {
   Query: {
-    users: (_, args = '', { User }) => {
+    users: async (_, args = '', { User, currentUser }) => {
       try {
-        return User.find({}).populate({
-          path: 'role',
-          model: 'Role',
-        });
+        consola.log(currentUser.role);
+        if (
+          currentUser && (
+            currentUser.role.name === 'SUPER-ADMIN' ||
+            currentUser.role.name === 'ADMIN'
+          )
+        ) {
+          return await User.find({}).populate({
+            path: 'role',
+            model: 'Role',
+          });
+        }
       } catch (err) {
         consola.error(err);
       }
@@ -21,18 +29,30 @@ export const UserResolvers = {
         model: 'Role',
       });
     },
+    me: (_, args, { currentUser }) => {
+      return currentUser;
+    }
   },
   Mutation: {
-    async signIn (_, { email, password }, { User, res, currentUser }) {
+    async signIn (_, { email, password }, { User, res, currentUser, sessions }) {
       if (!currentUser) {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate({
+          path: 'role',
+          model: 'Role',
+        });;
         if (user && await bcrypt.compare(password, user.password)) {
+
+          const sessionId = await sessions.set({
+            email: user.email, role: { name: user.role.name }
+          });
+          consola.log((parseInt(Date.now() / 1000) + 3 * (60 * 60)));
           const newToken = await SignToken(
-            { username: user.username, email: user.email }
+            { session: sessionId },
+            (parseInt(Date.now() / 1000) + 3 * (60 * 60))
           );
           consola.info(`TOKEN!!!: ${newToken}`);
-          res.header('authorization', newToken);
-          return `user ${user.username} has a new token! test`;
+          res.header('Authorization', `Bearer ${newToken}`);
+          return `welcome back`;
         } else {
           throw new Error('User not exist');
         }
@@ -40,15 +60,35 @@ export const UserResolvers = {
         return 'User already connected';
       }
     },
-    async signupUser (_, { username, email, password, role = 'USER' }, { User, Role }) {
-      // TODO: securize account creation, now any one can be super-admin or Admin. Apply connection verification,
-      // Only SUPER-ADMIN should be capable to create other SUPER-ADMIN,
-      // SUPER-ADMIN and ADMIN can create other ADMIN or USER
-      // when USER is connect don't read role parameter.
-
-      if (await User.findOne({ username })) {
+    async signOut (_, args, { sessions, sessionId, }) {
+      try {
+        return sessions.del(sessionId)
+      }
+      catch (err) {
+        consola.error(`SignOut: ${err}`);
+      }
+    },
+    async signUp (_, { email, password, role }, { User, Role, currentUser }) {
+      // Verify if user already exist
+      if (await User.findOne({ email })) {
         throw new Error('User already exist');
       }
+
+      // validate rights of current user
+      if (currentUser) {
+        switch (role.name) {
+          case 'ADMIN':
+            if (role === 'SUPER-ADMIN') {
+              throw new Error("You can't create an user with this role ");
+            }
+            break;
+          case 'USER':
+            throw new Error("You can't create an extra user");
+        }
+      } else {
+        role = 'USER'
+      }
+
       var roleDB = await Role.findOne({ name: role });
       if (await User.estimatedDocumentCount({}) < 1) {
         roleDB = await Role.findOne({ name: 'SUPER-ADMIN' });
@@ -57,13 +97,12 @@ export const UserResolvers = {
       if (
         roleDB &&
         (await new User({
-          username,
           email,
           password: hash,
           role: roleDB._id,
         }).save())
       ) {
-        return `user ${username} created!`;
+        return `user created!`;
       } else {
         throw new Error("something wrong we can't save the new user");
       }
