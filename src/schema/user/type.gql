@@ -1,6 +1,4 @@
 type User {
-  _id: ID
-  username: String!
   email: EmailAddress!
   password: String!
   role: Role
@@ -8,16 +6,17 @@ type User {
 }
 
 type Role {
-  _id: ID!
   name: String
 }
 
 extend type Query {
   users: [User]
-  user(id: String!): User
+  user(email: EmailAddress!): User
+  me: User
 }
 
 extend type Mutation {
   signIn(email: EmailAddress!, password: String!): String!
-  signupUser(username: String!, email: EmailAddress!, password: String!, role: String): String
+  signOut: String!
+  signUP(email: EmailAddress!, password: String!, role: String): String
 }
