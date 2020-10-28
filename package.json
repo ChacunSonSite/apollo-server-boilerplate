@@ -24,7 +24,7 @@
     "ioredis": "^4.19.0",
     "jsonwebtoken": "^8.5.1",
     "lodash-es": "^4.17.15",
-    "mongoose": "^5.10.10",
+    "mongoose": "^5.10.11",
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {
