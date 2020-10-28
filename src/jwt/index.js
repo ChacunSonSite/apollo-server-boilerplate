@@ -17,15 +17,16 @@ const verifyPromise = (...args) => {
   })
 }
 
-export const ValidateToken = (token) => {
+export const ValidateToken = (authorization) => {
   try {
-    return verifyPromise(token, getKey);
+    const token = authorization.split(' ')[1];
+    return verifyPromise(token, getKey, { ignoreExpiration: true });
   } catch (err) {
     consola.error(`Sign error: ${err}`);
   }
 }
 
-export const SignToken = async (data, expire = '2h') => {
+export const SignToken = async (data) => {
   try {
     // Chose randomly a key from the keys collection
     const privateKey = (await Key.aggregate([{ $sample: { size: 1 } }]))[0];
@@ -33,7 +34,6 @@ export const SignToken = async (data, expire = '2h') => {
       data,
       privateKey.key,
       {
-        expiresIn: expire,
         header: {
           kid: privateKey._id // Add key id to the JWT header, it will use during verification
         }

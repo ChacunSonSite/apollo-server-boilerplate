@@ -31,7 +31,7 @@ export const UserResolvers = {
             { username: user.username, email: user.email }
           );
           consola.info(`TOKEN!!!: ${newToken}`);
-          res.header('authentication', newToken);
+          res.header('authorization', newToken);
           return `user ${user.username} has a new token! test`;
         } else {
           throw new Error('User not exist');
