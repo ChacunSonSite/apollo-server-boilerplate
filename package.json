@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-boilerplate",
+  "name": "@cocoa_web_studio/apollo_server_boilerplate",
   "version": "0.0.1",
   "description": "Apollo-server boilerplate, it includes a basic schema, JWT, authentication, mongodb and webpack optimization, It's a really good starting point for your Apollo-server project",
   "main": "./src/index.js",
