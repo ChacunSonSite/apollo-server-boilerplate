@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.1.0
 jobs:
-  test:
+  test_node:
     filters:
       branches:
         only: master
@@ -16,7 +16,7 @@ jobs:
       - run:
         command: yarn run test
         name: Run YARN tests
-  release:
+  release_node:
     steps:
       - checkout
       - node/install-packages:
@@ -27,8 +27,8 @@ jobs:
 workflows:
   node_test_and_release:
     jobs:
-      - test
-      - release:
+      - test_node
+      - release_node:
           requires:
             - test
 
