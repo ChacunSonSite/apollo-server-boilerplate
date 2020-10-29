@@ -3,32 +3,34 @@ orbs:
   node: circleci/node@4.1.0
 jobs:
   test_node:
-    filters:
-      branches:
-        only: master
     executor:
       name: node/default
       tag: '13'
     steps:
       - checkout
       - node/install-packages:
-        pkg-manager: yarn
+          pkg-manager: yarn
       - run:
-        command: yarn run test
-        name: Run YARN tests
+          command: yarn run test
+          name: Run YARN tests
   release_node:
+    executor:
+      name: node/default
+      tag: '13'
     steps:
       - checkout
       - node/install-packages:
-        pkg-manager: yarn
+          pkg-manager: yarn
       - run:
-        command: yarn run semantic-release
-        name: Run YARN semantic-release
+          command: yarn run semantic-release
+          name: Run YARN semantic-release
 workflows:
-  node_test_and_release:
+  test_and_release:
     jobs:
-      - test_node
+      - test_node:
+          filters:
+            branches:
+              only: master
       - release_node:
           requires:
-            - test
-
+            - test_node
