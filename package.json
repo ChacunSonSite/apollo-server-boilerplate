@@ -1,9 +1,12 @@
 {
-  "name": "@cocoa_web_studio/apollo_server_boilerplate",
-  "version": "0.0.1",
+  "name": "@cocoaws/apollo-server-boilerplate",
+  "version": "0.1.0",
   "description": "Apollo-server boilerplate, it includes a basic schema, JWT, authentication, mongodb and webpack optimization, It's a really good starting point for your Apollo-server project",
   "main": "./src/index.js",
-  "repository": "git@github.com:CocoaWebStudio/apollo-server-boilerplate.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/CocoaWebStudio/apollo-server-boilerplate.git"
+  },
   "author": "Cocoa Web Studio",
   "license": "MIT",
   "private": false,
@@ -65,6 +68,10 @@
       "pre-commit": "lint-staged"
     }
   },
+  "bugs": {
+    "url": "https://github.com/CocoaWebStudio/apollo-server-boilerplate/issues"
+  },
+  "homepage": "https://github.com/CocoaWebStudio/apollo-server-boilerplate#readme",
   "keywords": [
     "apollo-server",
     "apollo",
