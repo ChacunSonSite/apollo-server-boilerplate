@@ -7,7 +7,6 @@ export const UserResolvers = {
   Query: {
     users: async (_, args = '', { User, currentUser }) => {
       try {
-        consola.log(currentUser.role);
         if (
           currentUser && (
             currentUser.role.name === 'SUPER-ADMIN' ||
