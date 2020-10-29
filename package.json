@@ -12,7 +12,9 @@
     "build:dev": "webpack --config webpack.development.js",
     "dev": "env NODE_ENV=development node ./dist/main.js",
     "lint": "eslint . --ext .js --ignore-path .gitignore",
-    "start": "env NODE_ENV=production node ./dist/main.js"
+    "start": "env NODE_ENV=production node ./dist/main.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "apollo-server": "^2.18.2",
@@ -28,19 +30,25 @@
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "apollo-link": "^1.2.14",
+    "apollo-link-http": "^1.5.17",
+    "apollo-server-testing": "^2.18.2",
+    "babel-jest": "^26.6.1",
     "clean-webpack-plugin": "^3.0.0",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-standard": "^15.0.0",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.2",
-    "graphql-tag": "^2.11.0",
     "husky": "^4.3.0",
+    "jest": "^26.6.1",
+    "jest-transform-graphql": "^2.1.0",
     "lint-staged": "^10.5.0",
+    "nock": "^13.0.4",
+    "node-fetch": "^2.6.1",
     "prettier": "^2.1.2",
     "webpack": "^5.3.1",
     "webpack-bundle-analyzer": "^3.9.0",
@@ -49,8 +57,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "lint-staged": {
-    "*.{js}": "yarn lint",
-    "*.{css}": "stylelint"
+    "*.{js}": "yarn lint"
   },
   "husky": {
     "hooks": {
