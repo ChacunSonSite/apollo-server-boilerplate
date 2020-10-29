@@ -2,35 +2,37 @@ version: 2.1
 orbs:
   node: circleci/node@4.1.0
 jobs:
-  test_node:
+  test:
     executor:
       name: node/default
-      tag: '13'
+      tag: '13.14'
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
+          cache-path: ~/project/node_modules
+          override-ci-command:  yarn
       - run:
           command: yarn run test
           name: Run YARN tests
-  release_node:
+  release:
     executor:
       name: node/default
-      tag: '13'
+      tag: '13.14'
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
           command: yarn run semantic-release
-          name: Run YARN semantic-release
+          name: Run Semantic Release
 workflows:
   test_and_release:
     jobs:
-      - test_node:
+      - test:
           filters:
             branches:
               only: master
-      - release_node:
+      - release:
           requires:
-            - test_node
+            - test
