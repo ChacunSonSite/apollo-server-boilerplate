@@ -38,7 +38,7 @@
     "apollo-link": "^1.2.14",
     "apollo-link-http": "^1.5.17",
     "apollo-server-testing": "^2.18.2",
-    "babel-jest": "^26.6.1",
+    "babel-jest": "^29.0.2",
     "clean-webpack-plugin": "^3.0.0",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
