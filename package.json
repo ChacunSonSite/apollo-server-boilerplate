@@ -20,7 +20,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "apollo-server": "^2.18.2",
+    "apollo-server": "^3.11.1",
     "bcryptjs": "^2.4.3",
     "consola": "^2.15.0",
     "dotenv": "^8.2.0",
